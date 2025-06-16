@@ -1,7 +1,9 @@
 package com.Perfulandia.ApiPedidos.services;
 
+import com.Perfulandia.ApiPedidos.dto.CuponDTO;
 import com.Perfulandia.ApiPedidos.dto.PedidoRequestDTO;
 import com.Perfulandia.ApiPedidos.dto.PedidoResponseDTO;
+import com.Perfulandia.ApiPedidos.dto.ProductoDTO;
 import com.Perfulandia.ApiPedidos.dto.UsuarioDTO;
 import com.Perfulandia.ApiPedidos.models.Pedido;
 import com.Perfulandia.ApiPedidos.models.Usuario;
@@ -82,6 +84,25 @@ public class PedidoService {
         usuarioDto.setNombreUsuario(pedido.getUsuario().getNombreUsuario());
         usuarioDto.setEmail(pedido.getUsuario().getEmail());
         dto.setUsuario(usuarioDto);
+
+        CuponDTO cuponDTO = new CuponDTO();
+        if (pedido.getCupon() != null) {
+            cuponDTO.setIdCupon(pedido.getCupon().getIdCupon());
+            cuponDTO.setNombreCupon(pedido.getCupon().getNombreCupon());
+            dto.setCupon(cuponDTO);
+        }
+
+        ProductoDTO productoDTO = new ProductoDTO();
+        productoDTO.setIdProducto(pedido.getProducto().getIdProducto());
+        productoDTO.setNombre(pedido.getProducto().getNombre());
+        productoDTO.setCosto(pedido.getProducto().getCosto());
+        productoDTO.setDescripcion(pedido.getProducto().getDescripcion());
+        productoDTO.setMarcaId(pedido.getProducto().getMarca().getIdMarca());
+        productoDTO.setNombreMarca(pedido.getProducto().getMarca().getNombreMarca());
+        productoDTO.setTipoProductoId(pedido.getProducto().getTipoProducto().getIdTipoProducto());
+        productoDTO.setNombreTipoProducto(pedido.getProducto().getTipoProducto().getNombreTipoproducto());
+        productoDTO.setPrecio(pedido.getProducto().getPrecio());
+        dto.setProducto(productoDTO);
 
         return dto;
     }

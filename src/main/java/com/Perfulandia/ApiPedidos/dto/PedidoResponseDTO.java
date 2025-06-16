@@ -9,5 +9,7 @@ public class PedidoResponseDTO {
     private LocalDate fechaPedido;
     private String estado;
     private Integer totalNeto;
+    private ProductoDTO producto;
     private UsuarioDTO usuario;
+    private CuponDTO cupon;
 }
