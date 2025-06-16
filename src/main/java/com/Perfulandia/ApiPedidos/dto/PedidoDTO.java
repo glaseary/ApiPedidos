@@ -10,4 +10,6 @@ public class PedidoDTO {
     private String estado;
     private Integer totalNeto;
     private Integer usuarioId;
+    private Integer productoId;
+    private Integer cuponId;
 }

@@ -1,18 +1,17 @@
 package com.Perfulandia.ApiPedidos.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference; // <-- Importar
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "PEDIDO")
 @Data
 public class Pedido {
-
-    // ... otros campos como idPedido, fechaPedido, etc. se mantienen igual ...
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_pedido")
@@ -32,10 +31,17 @@ public class Pedido {
     @JsonBackReference 
     private Usuario usuario;
 
-    @OneToMany(
-        mappedBy = "pedido",
-        cascade = CascadeType.ALL,
-        orphanRemoval = true
-    )
-    private List<DetallePedido> detalles = new ArrayList<>();
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCTO_id_producto", nullable = false)
+    @JsonBackReference 
+    private Producto producto;
+        
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CUPON_id_cupon", nullable = true)
+    @JsonBackReference // <-- AÑADIR ESTA LÍNEA
+    private Cupon cupon;
+
+    @OneToMany(mappedBy = "pedido", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<DetallePedido> pedidos;
 }

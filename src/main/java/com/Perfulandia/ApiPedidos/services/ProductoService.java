@@ -13,33 +13,35 @@ import java.util.stream.Collectors;
 @Service
 public class ProductoService {
 
-@Autowired
-private ProductoRepository productoRepository;
+  @Autowired
+  private ProductoRepository productoRepository;
 
 
-public List<ProductoDTO> listarProductos() {
-return productoRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
-}
+  public List<ProductoDTO> listarProductos() {
+    return productoRepository.findAll().stream().map(this::toDTO).collect(Collectors.toList());
+  }
 
-public ProductoDTO obtenerProductoPorId(Integer id) {
-return toDTO(findProductoById(id));
-}
+  public ProductoDTO obtenerProductoPorId(Integer id) {
+    return toDTO(findProductoById(id));
+  }
 
-public Producto findProductoById(Integer id) {
-return productoRepository.findById(id)
-.orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
-}
+  public Producto findProductoById(Integer id) {
+    return productoRepository.findById(id)
+    .orElseThrow(() -> new EntityNotFoundException("Producto no encontrado con ID: " + id));
+  }
 
-public ProductoDTO toDTO(Producto producto) {
-ProductoDTO dto = new ProductoDTO();
-dto.setIdProducto(producto.getIdProducto());
-dto.setNombre(producto.getNombre());
-  dto.setDescripcion(producto.getDescripcion());
-dto.setPrecio(producto.getPrecio());
-dto.setCosto(producto.getCosto());
-dto.setMarcaId(producto.getMarcaId());
-dto.setTipoProductoId(producto.getTipoProductoId());
-dto.setProveedorId(producto.getProveedorId());
-return dto;
+  public ProductoDTO toDTO(Producto producto) {
+    ProductoDTO dto = new ProductoDTO();
+    dto.setIdProducto(producto.getIdProducto());
+    dto.setNombre(producto.getNombre());
+    dto.setDescripcion(producto.getDescripcion());
+    dto.setPrecio(producto.getPrecio());
+    dto.setCosto(producto.getCosto());
+
+    // Extraer directamente los nombres
+    dto.setNombreMarca(producto.getMarca().getNombreMarca());
+    dto.setNombreTipoProducto(producto.getTipoProducto().getNombreTipoproducto());
+
+    return dto;
 }
 }
