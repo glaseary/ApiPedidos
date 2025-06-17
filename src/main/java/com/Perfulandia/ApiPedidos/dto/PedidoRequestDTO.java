@@ -9,5 +9,6 @@ public class PedidoRequestDTO {
     private String estado;
     private Integer totalNeto;
     private Integer usuarioId;
-    private String descripcionProductos;
+    private Integer productoId;
+    private Integer cuponId;
 }
