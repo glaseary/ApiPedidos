@@ -3,8 +3,10 @@ package com.Perfulandia.ApiPedidos.dto;
 import lombok.Data;
 import java.time.LocalDate;
 
+import org.springframework.hateoas.RepresentationModel;
+
 @Data
-public class PedidoResponseDTO {
+public class PedidoResponseDTO extends RepresentationModel <PedidoResponseDTO>{
     private Integer idPedido;
     private LocalDate fechaPedido;
     private String estado;
@@ -12,4 +14,5 @@ public class PedidoResponseDTO {
     private ProductoDTO producto;
     private UsuarioDTO usuario;
     private CuponDTO cupon;
+
 }

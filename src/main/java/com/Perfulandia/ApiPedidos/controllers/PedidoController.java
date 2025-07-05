@@ -5,6 +5,7 @@ import com.Perfulandia.ApiPedidos.dto.PedidoResponseDTO;
 import com.Perfulandia.ApiPedidos.services.PedidoService;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.Link;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -85,5 +86,47 @@ public class PedidoController {
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    // ======================================================
+    // MÉTODOS HATEOAS
+    // ======================================================
+
+    @GetMapping("/hateoas/{id}")
+    public ResponseEntity<PedidoResponseDTO> obtenerHATEOAS(@PathVariable Integer id) {
+        // Este método no cambia
+        try {
+            PedidoResponseDTO dto = pedidoService.obtenerPorId(id);
+            String gatewayUrl = "http://localhost:8888/api/proxy/pedidos";
+
+            dto.add(Link.of(gatewayUrl + "/hateoas/" + dto.getIdPedido()).withSelfRel());
+            dto.add(Link.of(gatewayUrl + "/hateoas").withRel("todos-los-pedidos"));
+            dto.add(Link.of(gatewayUrl + "/" + dto.getIdPedido()).withRel("actualizar").withType("PUT"));
+            dto.add(Link.of(gatewayUrl + "/" + dto.getIdPedido()).withRel("eliminar").withType("DELETE"));
+
+            return ResponseEntity.ok(dto);
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    /**
+     * Obtiene todos los pedidos y añade enlaces HATEOAS a cada uno,
+     * incluyendo el enlace para crear un nuevo pedido.
+     */
+    @GetMapping("/hateoas")
+    public ResponseEntity<List<PedidoResponseDTO>> listarHATEOAS() {
+        List<PedidoResponseDTO> pedidos = pedidoService.listarTodos();
+        String gatewayUrl = "http://localhost:8888/api/proxy/pedidos";
+
+        for (PedidoResponseDTO dto : pedidos) {
+            // Link a los detalles de este pedido (self)
+            dto.add(Link.of(gatewayUrl + "/hateoas/" + dto.getIdPedido()).withSelfRel());
+
+            // **ENLACE AÑADIDO PARA CREAR (POST)**
+            dto.add(Link.of(gatewayUrl).withRel("crear-pedido").withType("POST"));
+        }
+
+        return ResponseEntity.ok(pedidos);
     }
 }
